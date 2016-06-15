@@ -291,10 +291,14 @@ void SCCAMSlot::Process(const unsigned char *data, int len)
         DEBUGLOG("%d.%d answer to query suppressed", cardIndex, slot);
 
       if (ci_cmd == 0x04 || (ci_cmd == -1 && sid == 0 && ca_lm == 0x03))
+      {
         DEBUGLOG("%d.%d stop decrypt", cardIndex, slot);
+        decsa->Init_Parity(cardIndex, -1, slot);
+      }
       else if (ci_cmd == 0x01 || (ci_cmd == -1 && sid != 0 && (ca_lm == 0x03 || ca_lm == 0x04 || ca_lm == 0x05)))
       {
         INFOLOG("%d.%d set CAM decrypt (SID %d (0x%04X), caLm %d, HasCaDescriptors %d)", cardIndex, slot, sid, sid, ca_lm, HasCaDescriptors);
+        decsa->Init_Parity(cardIndex, sid, -1);
 
         if (!HasCaDescriptors)
         {
@@ -312,8 +316,15 @@ void SCCAMSlot::Process(const unsigned char *data, int len)
 
 void SCCAMSlot::StartDecrypting(void)
 {
+  DEBUGLOG("%s: slot:%d cardIndex:%d version:%d", __FUNCTION__, slot, cardIndex, version);
   cCamSlot::StartDecrypting();
   decsaFillControl.Reset();
+}
+
+void SCCAMSlot::StopDecrypting(void)
+{
+  decsa->CancelWait();
+  cCamSlot::StopDecrypting();
 }
 
 DeCSAFillControl::DeCSAFillControl(int MaxWaterMark, int Timeout, int DataInterval)

@@ -266,7 +266,7 @@ void SocketHandler::Action(void)
       memcpy(&ca_descr, &buff[sizeof(int)], sizeof(ca_descr_t));
       ca_descr.index = ntohl(ca_descr.index);
       ca_descr.parity = ntohl(ca_descr.parity);
-      decsa->SetDescr(&ca_descr, false);
+      decsa->SetDescr(&ca_descr, false, adapter_index);
       DEBUGLOG("%s: Got CA_SET_DESCR request, adapter_index=%d, index=%x", __FUNCTION__, adapter_index, ca_descr.index);
     }
     else if (*request == CA_SET_DESCR_MODE)
@@ -314,6 +314,9 @@ void SocketHandler::Action(void)
 
       DEBUGLOG("%s: Got DMX_STOP request, adapter_index=%d, pid=%X, demux_idx=%d, filter_num=%d", __FUNCTION__, adapter_index, pid, demux_index, filter_num);
       filter->SetFilter(adapter_index, pid, 0, demux_index, filter_num, NULL, NULL);
+
+      if (pid > 0)
+        decsa->StopDecrypt(adapter_index);
     }
     else if (*request == DVBAPI_SERVER_INFO)
     {
