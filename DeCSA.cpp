@@ -780,7 +780,7 @@ bool DeCSAAdapter::Decrypt(DeCSA *parent, unsigned char *data, int len, bool for
             {
               if (caPid >= 0)
               {
-                uint16_t caidneu = 0;//capmt->GetCAIDFromPid(adapter_index, caPid, caSid);
+                uint16_t caidneu = capmt->GetCAIDFromPid(adapter_index, caPid, caSid);
                 if (caidneu > 0)
                 {
                   DEBUGLOG("%s: SetFastEMMCaidSid adapter:%d CAID: %04X SID: %04X parity:%d pid:%d idx:%d", __FUNCTION__, adapter_index, caidneu, caSid, wantsparity, curPid, currIdx);

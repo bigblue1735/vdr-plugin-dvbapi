@@ -27,7 +27,7 @@
 
 #define CAPMT_BUFFER_SIZE    1024
 
-#define MAX_SOCKETS          16   // max sockets (simultaneus channels) per demux
+#define MAX_SOCKETS          32   // max sockets (simultaneus channels) per demux
 #define LIST_MORE            0x00
 #define LIST_FIRST           0x01
 #define LIST_LAST            0x02
@@ -78,6 +78,8 @@ public:
     return pmt.empty();
   }
   void SendAll();
+  uint16_t GetCAIDFromSid(int adapter_index, int sid);
+  uint16_t GetCAIDFromPid(int adapter_index, int pid, int& sid);
   void UpdateEcmInfo(int adapter_index, int sid, uint16_t caid, uint16_t pid, uint32_t prid, uint32_t ecmtime, char *cardsystem, char *reader, char *from, char *protocol, int8_t hops);
   bool FillEcmInfo(sDVBAPIEcmInfo *ecminfo);
 };
